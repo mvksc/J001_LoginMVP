@@ -1,4 +1,4 @@
-package m.vk.j001_loginmvp;
+package m.vk.j001_loginmvp.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,11 +9,14 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.util.List;
+
+import m.vk.j001_loginmvp.R;
+import m.vk.j001_loginmvp.model.ProductModel;
 import m.vk.j001_loginmvp.presenter.ILoginPresenter;
 import m.vk.j001_loginmvp.presenter.LoginPresenterCompI;
-import m.vk.j001_loginmvp.view.ILoginView;
 
-public class MainActivity extends AppCompatActivity implements ILoginView , View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements ILoginView , View.OnClickListener {
 
     private EditText edUser;
     private EditText edPass;
@@ -25,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements ILoginView , View
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
         //find view
         edUser = findViewById(R.id.edUsername);
@@ -51,12 +54,19 @@ public class MainActivity extends AppCompatActivity implements ILoginView , View
     }
 
     @Override
-    public void onLoginResult(Boolean result, int code) {
+    public void onLoginResult(Boolean result, int code, List<ProductModel> arrProduct) {
         loginPresenter.setProgressBarVisibility(View.INVISIBLE);
         btnLogin.setEnabled(true);
         btnClear.setEnabled(true);
         if (result){
-            Toast.makeText(this,"Login Success",Toast.LENGTH_SHORT).show();
+            String product = "";
+            for (int i = 0; i < arrProduct.size(); i++) {
+                if (product.length() > 0){
+                    product += "\n";
+                }
+                product += arrProduct.get(i).getName() + " : " + arrProduct.get(i).getPrice();
+            }
+            Toast.makeText(this,"Login Success \n" + product,Toast.LENGTH_SHORT).show();
         }
         else {
             Toast.makeText(this, "Login Fail, code = " + code, Toast.LENGTH_SHORT).show();
